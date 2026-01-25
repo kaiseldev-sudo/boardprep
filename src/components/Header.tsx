@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { useState, useEffect, forwardRef } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { Link, useLocation } from "react-router-dom";
 import logoFull from "@/assets/logo-full.png";
 import logoWhite from "@/assets/logo-white.png";
@@ -105,7 +106,7 @@ const Header = () => {
                         Review for Veterinary Licensure Exam.
                       </ListItem>
                       <ListItem href="/review/ftle" title="Fisheries Licensure Exam">
-                        Review for Fisheries Technologist Licensure Exam.
+                        Review for Fisheries Technologist Licensure Ezxam.
                       </ListItem>
                       <ListItem href="/review/fisheries" title="Fisheries Licensure Exam">
                         Fisheries specialized review materials.
@@ -141,7 +142,7 @@ const Header = () => {
               asChild
             >
               <a href="/question-drills">
-                Start Reviewing
+                Pre-register
               </a>
             </Button>
           </div>
@@ -156,66 +157,74 @@ const Header = () => {
         </div>
 
         {/* Mobile Navigation */}
-        {isMenuOpen && (
-          <nav className="lg:hidden py-4 -mx-6 lg:-mx-12 px-6 lg:px-12 bg-background border-b border-border">
-            <div className="flex flex-col space-y-2">
-              <Link
-                to="/"
-                className="text-sm font-medium py-3 border-b border-border/50 text-foreground"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Home
-              </Link>
+        <AnimatePresence>
+          {isMenuOpen && (
+            <motion.nav
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              className="lg:hidden -mx-6 lg:-mx-12 px-6 lg:px-12 bg-background border-b border-border overflow-hidden"
+            >
+              <div className="py-4 flex flex-col space-y-2">
+                <Link
+                  to="/"
+                  className="text-sm font-medium py-3 border-b border-border/50 text-foreground"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Home
+                </Link>
 
-              <Accordion type="single" collapsible className="w-full">
-                <AccordionItem value="products" className="border-b border-border/50">
-                  <AccordionTrigger className="text-sm font-medium py-3 hover:no-underline text-foreground">Product</AccordionTrigger>
-                  <AccordionContent>
-                    <div className="flex flex-col space-y-2 pl-4 py-2">
-                      <Link to="/question-drills" className="text-sm py-2 text-muted-foreground" onClick={() => setIsMenuOpen(false)}>Question Drills</Link>
-                      <Link to="/mobile-app" className="text-sm py-2 text-muted-foreground" onClick={() => setIsMenuOpen(false)}>Mobile App</Link>
-                      <span className="text-sm py-2 text-muted-foreground/50">iOS (Coming Soon)</span>
-                      <span className="text-sm py-2 text-muted-foreground/50">BoarPrep Lite (Coming App)</span>
-                      <Link to="/classroom" className="text-sm py-2 text-muted-foreground" onClick={() => setIsMenuOpen(false)}>BoardPrep Classroom</Link>
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
+                <Accordion type="single" collapsible className="w-full">
+                  <AccordionItem value="products" className="border-b border-border/50">
+                    <AccordionTrigger className="text-sm font-medium py-3 hover:no-underline text-foreground">Product</AccordionTrigger>
+                    <AccordionContent>
+                      <div className="flex flex-col space-y-2 pl-4 py-2">
+                        <Link to="/question-drills" className="text-sm py-2 text-muted-foreground" onClick={() => setIsMenuOpen(false)}>Question Drills</Link>
+                        <Link to="/mobile-app" className="text-sm py-2 text-muted-foreground" onClick={() => setIsMenuOpen(false)}>Mobile App</Link>
+                        <span className="text-sm py-2 text-muted-foreground/50">iOS (Coming Soon)</span>
+                        <span className="text-sm py-2 text-muted-foreground/50">BoarPrep Lite (Coming App)</span>
+                        <Link to="/classroom" className="text-sm py-2 text-muted-foreground" onClick={() => setIsMenuOpen(false)}>BoardPrep Classroom</Link>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
 
-                <AccordionItem value="review" className="border-b border-border/50">
-                  <AccordionTrigger className="text-sm font-medium py-3 hover:no-underline text-foreground">Review Class</AccordionTrigger>
-                  <AccordionContent>
-                    <div className="flex flex-col space-y-2 pl-4 py-2">
-                      <Link to="/review/vet" className="text-sm py-2 text-muted-foreground" onClick={() => setIsMenuOpen(false)}>VET</Link>
-                      <Link to="/review/ftle" className="text-sm py-2 text-muted-foreground" onClick={() => setIsMenuOpen(false)}>FTLE</Link>
-                      <Link to="/review/fisheries" className="text-sm py-2 text-muted-foreground" onClick={() => setIsMenuOpen(false)}>Fisheries</Link>
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
-              </Accordion>
+                  <AccordionItem value="review" className="border-b border-border/50">
+                    <AccordionTrigger className="text-sm font-medium py-3 hover:no-underline text-foreground">Review Class</AccordionTrigger>
+                    <AccordionContent>
+                      <div className="flex flex-col space-y-2 pl-4 py-2">
+                        <Link to="/review/vet" className="text-sm py-2 text-muted-foreground" onClick={() => setIsMenuOpen(false)}>VET</Link>
+                        <Link to="/review/ftle" className="text-sm py-2 text-muted-foreground" onClick={() => setIsMenuOpen(false)}>FTLE</Link>
+                        <Link to="/review/fisheries" className="text-sm py-2 text-muted-foreground" onClick={() => setIsMenuOpen(false)}>Fisheries</Link>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
 
-              <Link
-                to="/about"
-                className="text-sm font-medium py-3 border-b border-border/50 text-foreground"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                About
-              </Link>
-              <Link
-                to="/contact"
-                className="text-sm font-medium py-3 border-b border-border/50 text-foreground"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Contact
-              </Link>
+                <Link
+                  to="/about"
+                  className="text-sm font-medium py-3 border-b border-border/50 text-foreground"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  About
+                </Link>
+                <Link
+                  to="/contact"
+                  className="text-sm font-medium py-3 border-b border-border/50 text-foreground"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Contact
+                </Link>
 
-              <Button variant="hero" className="mt-6 w-full" asChild>
-                <a href="/question-drills">
-                  Start Reviewing
-                </a>
-              </Button>
-            </div>
-          </nav>
-        )}
+                <Button variant="hero" className="mt-6 w-full" asChild>
+                  <a href="/question-drills">
+                    Start Reviewing
+                  </a>
+                </Button>
+              </div>
+            </motion.nav>
+          )}
+        </AnimatePresence>
       </div>
     </header>
   );

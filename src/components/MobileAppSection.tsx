@@ -1,6 +1,8 @@
 import { Button } from "@/components/ui/button";
-import { Apple, Play, Smartphone } from "lucide-react";
-import phoneMockup from "@/assets/phone.png"; // Using existing asset if available, or fallback
+import { Play, Smartphone } from "lucide-react";
+import phoneMockup from "@/assets/phone.png";
+import googlePlayLogo from "@/assets/google-play.png";
+import appleLogo from "@/assets/apple-logo.png";
 
 const MobileAppSection = () => {
   return (
@@ -23,10 +25,10 @@ const MobileAppSection = () => {
       </div>
 
       <div className="container mx-auto px-6 lg:px-12 relative z-10 h-full">
-        <div className="grid lg:grid-cols-2 gap-12 items-end h-full">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-end h-full">
           
           {/* Content */}
-          <div className="space-y-8 text-center lg:text-left animate-fade-up self-center pb-24 lg:pb-0">
+          <div className="space-y-8 text-center lg:text-left animate-fade-up self-center pb-8 lg:pb-0">
             <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-background leading-tight">
               Level Up Your <br />
               <span className="text-background">Board Prep</span>
@@ -41,28 +43,28 @@ const MobileAppSection = () => {
               {/* Google Play Button */}
               <a 
                 href="https://play.google.com/store/apps/details?id=com.myboardprep.bpsmobile&hl=en-US" target="_blank" rel="noopener noreferrer" 
-                className="flex items-center gap-3 bg-black text-white px-6 py-3 hover:bg-gray-800 transition-all hover:scale-105 duration-300 shadow-xl border border-white/10 group"
+                className="flex items-center gap-3 bg-black/90 text-white px-5 py-2.5 hover:bg-black transition-all hover:scale-105 duration-300 shadow-xl border border-white/20 group rounded-none backdrop-blur-sm"
               >
                 <div className="w-8 h-8 flex items-center justify-center">
-                 <Play className="fill-current text-white w-6 h-6" />
+                  <img src={googlePlayLogo} alt="Google Play" className="w-full h-full object-contain" />
                 </div>
                 <div className="text-left">
                   <div className="text-[10px] uppercase tracking-wider opacity-80 font-medium">Get it on</div>
-                  <div className="text-xl font-bold font-sans leading-none">Google Play</div>
+                  <div className="text-lg font-bold font-sans leading-none">Google Play</div>
                 </div>
               </a>
 
               {/* App Store Button (Disabled) */}
               <button 
                 disabled
-                className="flex items-center gap-3 bg-gray-200 text-gray-500 px-6 py-3 cursor-not-allowed opacity-80 border border-gray-300"
+                className="flex items-center gap-3 bg-white/10 text-white px-5 py-2.5 cursor-not-allowed border border-white/20 rounded-none backdrop-blur-md hover:bg-white/20 transition-colors"
               >
                 <div className="w-8 h-8 flex items-center justify-center">
-                  <Apple className="text-gray-500 w-8 h-8 pb-1" fill="currentColor" />
+                  <img src={appleLogo} alt="App Store" className="w-full h-full object-contain brightness-0 invert" />
                 </div>
                 <div className="text-left">
-                  <div className="text-[10px] uppercase tracking-wider opacity-60 font-medium">Coming soon</div>
-                  <div className="text-xl font-bold font-sans leading-none">App Store</div>
+                  <div className="text-[10px] uppercase tracking-wider opacity-80 font-medium">Coming soon</div>
+                  <div className="text-lg font-bold font-sans leading-none">App Store</div>
                 </div>
               </button>
             </div>

@@ -1,3 +1,6 @@
+'use client';
+import { ReactLenis } from 'lenis/react';
+
 import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
 import ProductDualSection from "@/components/ProductDualSection";
@@ -13,22 +16,22 @@ import Footer from "@/components/Footer";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      <main>
-        <HeroSection />
-        <MobileAppSection />
-        <ProductDualSection />
-        <FeaturesSection />
-        <HowItWorksSection />
-        <StatsSection />
-        <AboutSection />
-        <TestimonialSection />
-        <CTASection />
-      </main>
-      <Footer />
+      <div className="min-h-screen bg-background">
+        <Header />
+        <main>
+          <HeroSection />
+          <StatsSection />
+          <ProductDualSection />
+          <MobileAppSection />
+          <FeaturesSection />
+          <HowItWorksSection />
+          <AboutSection />
+          <TestimonialSection />
+          <CTASection />
+        </main>
+        <Footer />
 
-    </div>
+      </div>
   );
 };
 

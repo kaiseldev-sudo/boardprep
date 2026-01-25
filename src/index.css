@@ -353,6 +353,15 @@
   animation: marquee-reverse 40s linear infinite;
 }
 
+@media (hover: hover) {
+  .group:hover .animate-marquee {
+    animation-play-state: paused;
+  }
+  .group:hover .animate-marquee-reverse {
+    animation-play-state: paused;
+  }
+}
+
 .paused {
   animation-play-state: paused;
 }

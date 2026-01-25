@@ -75,7 +75,7 @@ const TestimonialSection = () => {
       <div className="space-y-8">
         {/* First Row - Scrolling Left (Normal) */}
         <div className="relative w-full overflow-hidden group">
-          <div className="flex gap-6 animate-marquee group-hover:paused w-max px-4">
+          <div className="flex gap-6 animate-marquee w-max pr-6">
             {/* Duplicate list to ensure seamless looping */}
             {[...testimonials, ...testimonials, ...testimonials].map((testimonial, index) => (
               <div 
@@ -105,7 +105,7 @@ const TestimonialSection = () => {
 
         {/* Second Row - Scrolling Right (Reverse) */}
         <div className="relative w-full overflow-hidden group">
-          <div className="flex gap-6 animate-marquee-reverse group-hover:paused w-max px-4">
+          <div className="flex gap-6 animate-marquee-reverse w-max pr-6">
             {/* Duplicate list to ensure seamless looping */}
             {[...testimonials, ...testimonials, ...testimonials].map((testimonial, index) => (
               <div 

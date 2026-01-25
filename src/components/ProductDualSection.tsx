@@ -4,8 +4,28 @@ import phone from "@/assets/phone.png";
 import laptop from "@/assets/laptop.png";
 import { useScroll, useTransform, motion, MotionValue } from "framer-motion";
 import { useRef } from "react";
-import { ArrowRight } from "lucide-react";
-import Blocks from '@/components/ui/blocks';
+import {
+  ArrowRight,
+  Rocket,
+  Gamepad2,
+  Gift,
+  BookOpen,
+  Sparkles,
+  Search,
+  BarChart3,
+  School,
+  Bot,
+  TrendingUp,
+  Target,
+  Zap,
+  Brain,
+  Trophy,
+  Smartphone,
+  Cloud,
+  Star,
+  Wallet,
+} from "lucide-react";
+import Blocks from "@/components/ui/blocks";
 
 const cards = [
   {
@@ -13,16 +33,18 @@ const cards = [
     description: (
       <ul className="text-left space-y-4">
         <li className="flex items-center gap-3 text-lg font-medium text-slate-700">
-          <span className="text-2xl">🚀</span> Offline? No Problem!
+          <Rocket className="w-6 h-6 text-indigo-600" /> Offline? No Problem!
         </li>
         <li className="flex items-center gap-3 text-lg font-medium text-slate-700">
-          <span className="text-2xl">🕹️</span> Level Up with Gamified Drills
+          <Gamepad2 className="w-6 h-6 text-indigo-600" /> Level Up with
+          Gamified Drills
         </li>
         <li className="flex items-center gap-3 text-lg font-medium text-slate-700">
-          <span className="text-2xl">🎁</span> Win Rewards as You Learn
+          <Gift className="w-6 h-6 text-indigo-600" /> Win Rewards as You Learn
         </li>
         <li className="flex items-center gap-3 text-lg font-medium text-slate-700">
-          <span className="text-2xl">📚</span> New Questions Every Exam
+          <BookOpen className="w-6 h-6 text-indigo-600" /> New Questions Every
+          Exam
         </li>
       </ul>
     ),
@@ -30,29 +52,32 @@ const cards = [
     imageAlt: "Mobile App Interface",
     color: "bg-[#A7A7FF]", // Vibrant purple-ish blue
     textColor: "text-slate-900",
-    imageClass: "w-[60%]", 
+    imageClass: "w-[60%]",
   },
   {
     title: "LMS for Universities & Centers",
     description: (
       <ul className="text-left space-y-4">
         <li className="flex items-center gap-3 text-lg font-medium text-slate-800">
-          <span className="text-2xl">🔮</span> Predicts Board Exam Success
+          <Sparkles className="w-6 h-6 text-pink-600" /> Predicts Board Exam
+          Success
         </li>
         <li className="flex items-center gap-3 text-lg font-medium text-slate-800">
-          <span className="text-2xl">🧐</span> Smart Question Analysis
+          <Search className="w-6 h-6 text-pink-600" /> Smart Question Analysis
         </li>
         <li className="flex items-center gap-3 text-lg font-medium text-slate-800">
-          <span className="text-2xl">📊</span> Tracks Student Performance
+          <BarChart3 className="w-6 h-6 text-pink-600" /> Tracks Student
+          Performance
         </li>
         <li className="flex items-center gap-3 text-lg font-medium text-slate-800">
-          <span className="text-2xl">🏫</span> Dedicated LMS for Board Exam Prep
+          <School className="w-6 h-6 text-pink-600" /> Dedicated LMS for Board
+          Exam Prep
         </li>
       </ul>
     ),
     image: laptop,
     imageAlt: "LMS Dashboard Interface",
-    color: "bg-[#FFD4E2]", // Soft pink/rose 
+    color: "bg-[#FFD4E2]", // Soft pink/rose
     textColor: "text-slate-900",
     imageClass: "w-[90%]",
   },
@@ -61,17 +86,19 @@ const cards = [
     description: (
       <ul className="text-left space-y-4">
         <li className="flex items-center gap-3 text-lg font-medium text-slate-800">
-          <span className="text-2xl">🤖</span> AI-Powered Study Plans
+          <Bot className="w-6 h-6 text-emerald-600" /> AI-Powered Study Plans
         </li>
         <li className="flex items-center gap-3 text-lg font-medium text-slate-800">
-          <span className="text-2xl">📈</span> Real-time Performance Analytics
+          <TrendingUp className="w-6 h-6 text-emerald-600" /> Real-time
+          Performance Analytics
         </li>
         <li className="flex items-center gap-3 text-lg font-medium text-slate-800">
-          <span className="text-2xl">🎯</span> Personalized Question Targeting
+          <Target className="w-6 h-6 text-emerald-600" /> Personalized Question
+          Targeting
         </li>
       </ul>
     ),
-    image: laptop, 
+    image: laptop,
     imageAlt: "AI Coach Interface",
     color: "bg-[#C4F5E1]", // Mint Green
     textColor: "text-slate-900",
@@ -82,13 +109,13 @@ const cards = [
     description: (
       <ul className="text-left space-y-4">
         <li className="flex items-center gap-3 text-lg font-medium text-slate-800">
-          <span className="text-2xl">⚡</span> Rapid Fire Mode
+          <Zap className="w-6 h-6 text-yellow-600" /> Rapid Fire Mode
         </li>
         <li className="flex items-center gap-3 text-lg font-medium text-slate-800">
-          <span className="text-2xl">🧠</span> Spaced Repetition Logic
+          <Brain className="w-6 h-6 text-yellow-600" /> Spaced Repetition Logic
         </li>
         <li className="flex items-center gap-3 text-lg font-medium text-slate-800">
-          <span className="text-2xl">🏆</span> Daily Challenges
+          <Trophy className="w-6 h-6 text-yellow-600" /> Daily Challenges
         </li>
       </ul>
     ),
@@ -103,13 +130,14 @@ const cards = [
     description: (
       <ul className="text-left space-y-4">
         <li className="flex items-center gap-3 text-lg font-medium text-slate-800">
-          <span className="text-2xl">🍎</span> Fully Optimized for iOS
+          <Smartphone className="w-6 h-6 text-sky-600" /> Fully Optimized for
+          iOS
         </li>
         <li className="flex items-center gap-3 text-lg font-medium text-slate-800">
-          <span className="text-2xl">📱</span> Native Experience
+          <Smartphone className="w-6 h-6 text-sky-600" /> Native Experience
         </li>
         <li className="flex items-center gap-3 text-lg font-medium text-slate-800">
-          <span className="text-2xl">☁️</span> iCloud Sync Support
+          <Cloud className="w-6 h-6 text-sky-600" /> iCloud Sync Support
         </li>
       </ul>
     ),
@@ -124,13 +152,13 @@ const cards = [
     description: (
       <ul className="text-left space-y-4">
         <li className="flex items-center gap-3 text-lg font-medium text-slate-800">
-          <span className="text-2xl">✨</span> Essential Features Only
+          <Star className="w-6 h-6 text-orange-600" /> Essential Features Only
         </li>
         <li className="flex items-center gap-3 text-lg font-medium text-slate-800">
-          <span className="text-2xl">💸</span> Budget-Friendly Option
+          <Wallet className="w-6 h-6 text-orange-600" /> Budget-Friendly Option
         </li>
         <li className="flex items-center gap-3 text-lg font-medium text-slate-800">
-          <span className="text-2xl">🚀</span> Quick Start Guide
+          <Rocket className="w-6 h-6 text-orange-600" /> Quick Start Guide
         </li>
       </ul>
     ),
@@ -173,46 +201,51 @@ const Card = ({
   return (
     <div
       ref={container}
-      className="h-screen flex items-center justify-center sticky top-0"
+      className="h-[calc(100vh-6rem)] flex items-start justify-center sticky top-24"
     >
       <motion.div
         style={{
           scale,
-          top: `calc(-5vh + ${i * 25}px)`,
+          top: `calc(${i * 45}px)`,
         }}
-        className={`relative -top-[25%] h-[550px] w-full max-w-6xl rounded-[3rem] p-12 origin-top shadow-xl overflow-hidden ${color} flex flex-col justify-center`}
+        className={`relative min-h-[550px] h-auto w-full max-w-6xl rounded-md px-12 pt-12 pb-0 origin-top shadow-xl overflow-hidden ${color} flex flex-col justify-center`}
       >
-        <div className="grid md:grid-cols-2 gap-12 h-full items-center">
-          
+        <div className="grid md:grid-cols-2 gap-12 h-full">
           {/* Left Column: Content */}
           <div className="flex flex-col justify-center space-y-8">
-             <div className="space-y-4">
-                <h3 className={`text-3xl md:text-5xl font-display font-bold leading-tight ${textColor}`}>{title}</h3>
-                <div className="h-1.5 w-24 bg-white/50 rounded-full" />
-             </div>
-             
-             <div className="py-4">
-                {description}
-             </div>
+            <div className="space-y-4">
+              <h3
+                className={`text-3xl md:text-5xl font-display font-bold leading-tight ${textColor}`}
+              >
+                {title}
+              </h3>
+              <div className="h-1.5 w-24 bg-white/50 rounded-full" />
+            </div>
 
-             <div className="pt-2">
-                <Button variant="link" className={`p-0 h-auto text-lg font-semibold gap-2 ${textColor} hover:opacity-80 transition-opacity`}>
-                   See more <ArrowRight size={20} />
-                </Button>
-             </div>
+            <div className="py-4">{description}</div>
+
+            <div className="pt-2">
+              <Button
+                variant="link"
+                className={`p-0 h-auto text-lg font-semibold gap-2 ${textColor} hover:opacity-80 transition-opacity`}
+              >
+                See more <ArrowRight size={20} />
+              </Button>
+            </div>
           </div>
 
           {/* Right Column: Image */}
-          <div className="relative h-full flex items-center justify-center">
-             <div className={`relative ${imageClass} transform transition-transform duration-500 hover:scale-[1.02]`}>
-                <img
-                    src={image}
-                    alt={imageAlt}
-                    className="w-full h-auto object-contain" 
-                />
-             </div>
+          <div className="relative h-full flex items-end justify-center">
+            <div
+              className={`relative ${imageClass} transform transition-transform duration-500 hover:scale-[1.02]`}
+            >
+              <img
+                src={image}
+                alt={imageAlt}
+                className="w-full h-auto object-contain"
+              />
+            </div>
           </div>
-
         </div>
       </motion.div>
     </div>
@@ -227,11 +260,15 @@ const ProductDualSection = () => {
   });
 
   return (
-    <section className="py-24 border-t border-border/50 dark:bg-black bg-white before:absolute before:w-full before:h-full before:bg-linear-to-t  dark:before:from-[#070707] before:from-[#dbdbdb] before:z-1 w-full relative" ref={containerRef} id="product-dual">
+    <section
+      className="py-24 border-t border-border/50 dark:bg-black bg-white before:absolute before:w-full before:h-full before:bg-linear-to-t  dark:before:from-[#070707] before:from-[#dbdbdb] before:z-1 w-full relative"
+      ref={containerRef}
+      id="product-dual"
+    >
       <Blocks
-        activeDivsClass='dark:bg-[#131212]  bg-[#9ba1a131]  '
-        divClass='dark:border-[#131212] border-[#9ba1a131] '
-        classname='w-full opacity-25'
+        activeDivsClass="dark:bg-[#131212]  bg-[#9ba1a131]  "
+        divClass="dark:border-[#131212] border-[#9ba1a131] "
+        classname="w-full opacity-25"
         containerRef={containerRef}
         activeDivs={{
           0: new Set([2, 4, 6]),
@@ -250,31 +287,33 @@ const ProductDualSection = () => {
           15: new Set([1, 6]),
         }}
       />
-        <div className="container mx-auto px-6 lg:px-12">
-            <div className="text-center space-y-4">
-                 <h2 className="text-4xl md:text-5xl font-display font-bold text-foreground">Our Products</h2>
-                 <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                    Everything you need to ace your board exams, in one place.
-                 </p>
-            </div>
-            
-            {cards.map((card, i) => {
-                const step = 1 / cards.length;
-                const targetScale = 1 - (cards.length - 1 - i) * 0.05;
-                const rangeStart = step * i;
-                
-                return (
-                <Card
-                    key={i}
-                    i={i}
-                    {...card}
-                    progress={scrollYProgress}
-                    range={[rangeStart, 1]}
-                    targetScale={targetScale}
-                />
-                );
-            })}
+      <div className="container mx-auto px-6 lg:px-12">
+        <div className="text-center space-y-4 mb-20">
+          <h2 className="text-4xl md:text-5xl font-display font-bold text-foreground">
+            Our Products
+          </h2>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            Everything you need to ace your board exams, in one place.
+          </p>
         </div>
+
+        {cards.map((card, i) => {
+          const step = 1 / cards.length;
+          const targetScale = 1 - (cards.length - 1 - i) * 0.05;
+          const rangeStart = step * i;
+
+          return (
+            <Card
+              key={i}
+              i={i}
+              {...card}
+              progress={scrollYProgress}
+              range={[rangeStart, 1]}
+              targetScale={targetScale}
+            />
+          );
+        })}
+      </div>
     </section>
   );
 };

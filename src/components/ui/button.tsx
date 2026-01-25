@@ -22,7 +22,7 @@ const buttonVariants = cva(
         link:
           "text-primary underline-offset-4 hover:underline",
         hero:
-          "bg-gradient-primary text-primary-foreground tracking-wide uppercase text-xs font-semibold shadow-lg hover:shadow-glow  rounded-none",
+          "bg-gradient-primary rounded-none text-primary-foreground tracking-wide uppercase text-xs font-semibold shadow-lg hover:shadow-glow",
         heroOutline:
           "border border-accent bg-transparent text-primary tracking-wide uppercase text-xs font-semibold hover:bg-accent/50 hover:border-accent rounded-none",
         checkoutOutline:

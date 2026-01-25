@@ -2,16 +2,17 @@ import { Mail, Phone, MapPin, Facebook, Instagram, Linkedin } from "lucide-react
 import { Link, useLocation } from "react-router-dom";
 import logoFull from "@/assets/logo-white.png";
 
+
 const Footer = () => {
   const currentYear = new Date().getFullYear();
   const location = useLocation();
 
   const quickLinks = [
-    { label: "Home", href: "/", isHash: false },
-    { label: "Products", href: "/products", isHash: false },
-    { label: "How It Works", href: "#how-it-works", isHash: true },
-    { label: "About", href: "#about", isHash: true },
-    { label: "Contact", href: "#contact", isHash: true },
+    { label: "Question Drills", href: "/question-drills", isHash: false },
+    { label: "BoardPrep Classroom", href: "/classroom", isHash: false },
+    { label: "Mobile App", href: "/mobile-app", isHash: false },
+    { label: "About Us", href: "/about", isHash: false },
+    { label: "Contact Us", href: "/contact", isHash: false },
   ];
 
   return (
@@ -90,7 +91,7 @@ const Footer = () => {
               <li className="flex items-start gap-3">
                 <MapPin size={18} className="text-primary mt-0.5 flex-shrink-0" />
                 <span className="text-secondary-foreground/60 text-sm">
-                  31st One San Miguel Avenue San Miguel Avenue, San Antonio
+                  Level 10-1 Fort Legend Tower, 31st Street & 3rd Avenue, Bonifacio Global City, Taguig City, 1634, Philippines
                 </span>
               </li>
               <li className="flex items-center gap-3">
@@ -105,10 +106,10 @@ const Footer = () => {
               <li className="flex items-center gap-3">
                 <Mail size={18} className="text-primary flex-shrink-0" />
                 <a
-                  href="mailto:sentinelvet.care@gmail.com"
+                  href="mailto:acewithboardprep@gmail.com "
                   className="text-secondary-foreground/60 hover:text-primary transition-colors duration-300 text-sm"
                 >
-                  sentinelvet.care@gmail.com
+                  acewithboardprep@gmail.com 
                 </a>
               </li>
             </ul>
