@@ -40,15 +40,15 @@ const HeroSection = () => {
 
           {/* CTAs */}
           <div className="animate-fade-up delay-300 flex flex-col sm:flex-row gap-4">
-            <a href="/question-drills" className="w-full sm:w-auto">
+            <a href="/pre-register" className="w-full sm:w-auto">
               <Button variant="hero" size="lg" className="w-full sm:w-auto">
-                <span>Start Practice Drills</span>
+                <span>Pre-Register Now!</span>
                 <ArrowRight size={18} />
               </Button>
             </a>
             <Button variant="heroOutline" size="lg" className="w-full sm:w-auto" asChild>
               <a href="/review/vet">
-                View Review Classes
+                Start Practice Drills
               </a>
             </Button>
           </div>
