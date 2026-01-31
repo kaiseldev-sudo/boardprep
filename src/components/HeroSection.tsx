@@ -40,7 +40,7 @@ const HeroSection = () => {
                   size="lg"
                   className="w-full sm:w-auto group"
                 >
-                  <span>Pre-Register Now!</span>
+                  <span>Get Started Now!</span>
                   <ArrowRight
                     size={18}
                     className="transition-transform group-hover:translate-x-1"

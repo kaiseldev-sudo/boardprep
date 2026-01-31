@@ -330,7 +330,7 @@ const AbeDetails = () => {
                 </p>
                 <div className="animate-fade-up delay-300 flex flex-col sm:flex-row gap-4 justify-center">
                   <a
-                    href="#"
+                    href="https://lms2.myboardprep.com/"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="w-full sm:w-auto"

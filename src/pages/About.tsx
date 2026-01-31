@@ -7,12 +7,24 @@ const About = () => {
       <Header />
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="pt-32 pb-20 lg:pt-40 lg:pb-28 bg-secondary/5">
-          <div className="container mx-auto px-6 lg:px-12 text-center">
-            <h1 className="font-display text-4xl md:text-5xl lg:text-6xl text-foreground font-bold mb-6">
-              About <span className="text-secondary">BoardPrep</span>
+        <section className="relative pt-32 pb-20 lg:pt-40 lg:pb-28 bg-secondary overflow-hidden">
+          {/* Background Image/Pattern */}
+          <div
+            className="absolute inset-0 z-0 pointer-events-none bg-center bg-no-repeat bg-contain"
+            style={{
+              backgroundImage: `url(${new URL("@/assets/logo-transparent.png", import.meta.url).href})`,
+              backgroundSize: "60%",
+            }}
+          />
+
+          {/* Gradient Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-r from-secondary/80 via-secondary/80 to-secondary/80" />
+
+          <div className="container mx-auto px-6 lg:px-12 text-center relative z-10">
+            <h1 className="font-display text-4xl md:text-5xl lg:text-6xl text-white font-bold mb-6">
+              About <span className="text-primary">BoardPrep</span>
             </h1>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-xl text-white/90 max-w-2xl mx-auto">
               Empowering students to achieve their dreams through innovative,
               accessible, and effective board exam preparation.
             </p>
@@ -76,16 +88,30 @@ const About = () => {
               <h2 className="text-3xl font-display font-bold text-foreground mb-8">
                 As seen on
               </h2>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-8 items-center opacity-70">
-                {/* Media Logo Placeholders */}
-                {[1, 2, 3, 4].map((i) => (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center opacity-70">
+                {[
+                  {
+                    src: new URL("@/assets/dzxl.png", import.meta.url).href,
+                    alt: "DZXL",
+                  },
+                  {
+                    src: new URL("@/assets/sup.jpg", import.meta.url).href,
+                    alt: "Startup Philippines",
+                  },
+                  {
+                    src: new URL("@/assets/mb.jpg", import.meta.url).href,
+                    alt: "Manila Bulletin",
+                  },
+                ].map((media, index) => (
                   <div
-                    key={i}
-                    className="h-24 bg-muted/50 rounded-lg flex items-center justify-center border border-border/50 hover:bg-muted transition-colors"
+                    key={index}
+                    className="h-32 flex items-center justify-center p-4 overflow-hidden"
                   >
-                    <span className="text-muted-foreground font-medium">
-                      Media {i}
-                    </span>
+                    <img
+                      src={media.src}
+                      alt={media.alt}
+                      className="max-w-full max-h-full object-contain grayscale hover:grayscale-0 transition-all duration-300"
+                    />
                   </div>
                 ))}
               </div>
@@ -97,21 +123,30 @@ const About = () => {
                 Awards & Recognitions
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center opacity-70">
-                {/* Award Placeholders */}
-                {[1, 2, 3].map((i) => (
+                {[
+                  {
+                    src: new URL("@/assets/pcieerd.jpg", import.meta.url).href,
+                    alt: "DOST PCIEERD",
+                  },
+                  {
+                    src: new URL("@/assets/PFA Logo.png", import.meta.url).href,
+                    alt: "PFA",
+                  },
+                  {
+                    src: new URL("@/assets/logo_ch_print.png", import.meta.url)
+                      .href,
+                    alt: "Recognition",
+                  },
+                ].map((award, index) => (
                   <div
-                    key={i}
-                    className="h-32 bg-muted/50 rounded-lg flex flex-col items-center justify-center border border-border/50 hover:bg-muted transition-colors p-4"
+                    key={index}
+                    className="h-32 rounded-lg flex items-center justify-center  p-4 overflow-hidden"
                   >
-                    <div className="w-12 h-12 bg-accent/20 rounded-full mb-3 flex items-center justify-center">
-                      <span className="text-2xl">🏆</span>
-                    </div>
-                    <span className="text-muted-foreground font-medium">
-                      Award Title {i}
-                    </span>
-                    <span className="text-xs text-muted-foreground/60 mt-1">
-                      Organization
-                    </span>
+                    <img
+                      src={award.src}
+                      alt={award.alt}
+                      className="max-w-full max-h-full object-contain grayscale hover:grayscale-0 transition-all duration-300"
+                    />
                   </div>
                 ))}
               </div>
