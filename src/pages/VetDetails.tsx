@@ -369,7 +369,7 @@ const VetDetails = () => {
                     </Button>
                   </a>
                   <a
-                    href="mailto:info@myboardprep.com"
+                    href="mailto:acewithboardprep@gmail.com"
                     className="w-full sm:w-auto"
                   >
                     <Button

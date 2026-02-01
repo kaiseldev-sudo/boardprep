@@ -324,28 +324,28 @@ const Header = () => {
                             className="text-sm py-2 text-muted-foreground"
                             onClick={() => setIsMenuOpen(false)}
                           >
-                            VET
+                            Veterinary Licensure Exam
                           </Link>
                           <Link
                             to="/review/ftle"
                             className="text-sm py-2 text-muted-foreground"
                             onClick={() => setIsMenuOpen(false)}
                           >
-                            FTLE
+                            Food Technology Licensure Exam
                           </Link>
                           <Link
                             to="/review/fisheries"
                             className="text-sm py-2 text-muted-foreground"
                             onClick={() => setIsMenuOpen(false)}
                           >
-                            Fisheries
+                            Fisheries Licensure Exam
                           </Link>
                           <Link
                             to="/review/abe"
                             className="text-sm py-2 text-muted-foreground"
                             onClick={() => setIsMenuOpen(false)}
                           >
-                            ABE
+                            Agricultural and Biosystems Engineering Licensure Exam
                           </Link>
                         </div>
                       </AccordionContent>

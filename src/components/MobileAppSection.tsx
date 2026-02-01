@@ -61,9 +61,9 @@ const MobileAppSection = () => {
                 href="https://play.google.com/store/apps/details?id=com.myboardprep.bpsmobile&hl=en-US"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center gap-3 bg-black/90 text-white px-5 py-2.5 hover:bg-black transition-all hover:scale-105 duration-300 shadow-xl border border-white/20 group rounded-none backdrop-blur-sm"
+                className="flex items-center justify-center gap-3 bg-black/90 text-white px-5 py-2.5 hover:bg-black/75 transition-all duration-300 shadow-xl border border-white/20 group rounded-full backdrop-blur-sm cursor-pointer"
               >
-                <div className="w-8 h-8 flex items-center justify-center">
+                <div className="w-8 h-8 flex items-center justify-center transition-transform duration-700 ease-in-out group-hover:rotate-[360deg]">
                   <img
                     src={googlePlayLogo}
                     alt="Google Play"
@@ -83,7 +83,7 @@ const MobileAppSection = () => {
               {/* App Store Button (Disabled) */}
               <button
                 disabled
-                className="flex items-center justify-center gap-3 bg-white/10 text-white px-5 py-2.5 cursor-not-allowed border border-white/20 rounded-none backdrop-blur-md hover:bg-white/20 transition-colors"
+                className="flex items-center justify-center gap-3 bg-white/10 text-white px-5 py-2.5 cursor-not-allowed border border-white/20 rounded-full backdrop-blur-md hover:bg-white/20 transition-colors"
               >
                 <div className="w-8 h-8 flex items-center justify-center">
                   <img
