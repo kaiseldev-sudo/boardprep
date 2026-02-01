@@ -24,6 +24,7 @@ import {
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isStyleOpen, setIsStyleOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const location = useLocation();
@@ -58,10 +59,11 @@ const Header = () => {
       <div className="container mx-auto px-6 lg:px-12">
         <div
           className={cn(
-            "transition-all duration-500 ease-out",
+            "transition-[box-shadow,background-color,padding] duration-500 ease-out",
             isScrolled
-              ? "bg-card/95 backdrop-blur-lg shadow-elegant rounded-full px-6 py-3"
-              : "bg-card/95 backdrop-blur-lg shadow-soft rounded-full px-6 py-3",
+              ? "bg-card/95 backdrop-blur-lg shadow-elegant px-6 py-3"
+              : "bg-card/95 backdrop-blur-lg shadow-soft px-6 py-3",
+            isStyleOpen ? "rounded-2xl" : "rounded-full",
           )}
         >
           <div className="flex items-center justify-between">
@@ -239,21 +241,24 @@ const Header = () => {
             {/* Mobile Menu Button */}
             <button
               className="lg:hidden p-2 transition-colors text-foreground"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              onClick={() => {
+                if (!isMenuOpen) setIsStyleOpen(true);
+                setIsMenuOpen(!isMenuOpen);
+              }}
             >
               {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
           </div>
 
           {/* Mobile Navigation */}
-          <AnimatePresence>
+          <AnimatePresence onExitComplete={() => setIsStyleOpen(false)}>
             {isMenuOpen && (
               <motion.nav
                 initial={{ height: 0, opacity: 0 }}
                 animate={{ height: "auto", opacity: 1 }}
                 exit={{ height: 0, opacity: 0 }}
                 transition={{ duration: 0.3, ease: "easeInOut" }}
-                className="lg:hidden -mx-6 lg:-mx-12 px-6 lg:px-12 bg-background border-b border-border overflow-hidden"
+                className="lg:hidden -mx-6 lg:-mx-12 px-6 lg:px-12 border-b border-border overflow-hidden"
               >
                 <div className="py-4 flex flex-col space-y-2">
                   <Link

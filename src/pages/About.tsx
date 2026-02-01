@@ -38,7 +38,7 @@ const About = () => {
               <h2 className="text-3xl font-display font-bold text-foreground mb-4">
                 Our Mission
               </h2>
-              <p className="text-lg text-muted-foreground leading-relaxed">
+              <p className="text-lg text-muted-foreground leading-relaxed text-justify md:text-left">
                 Board Prep Solutions is dedicated to enhancing educational
                 quality through expert consultancy services, technology-enabled
                 review programs and comprehensive competency development
@@ -53,7 +53,7 @@ const About = () => {
               <h2 className="text-3xl font-display font-bold text-foreground mb-4">
                 Our Vision
               </h2>
-              <p className="text-lg text-muted-foreground leading-relaxed">
+              <p className="text-lg text-muted-foreground leading-relaxed text-justify md:text-left">
                 Board Prep Solutions envisions becoming a leading driver of
                 innovation in higher education by delivering transformative
                 digital learning solutions and professional development
