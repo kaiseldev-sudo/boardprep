@@ -96,11 +96,14 @@ const formSchema = z.object({
   agreedToTerms: z
     .boolean()
     .refine((val) => val === true, "You must agree to the terms"),
+  hasPreRegistered: z.string().min(1, "Please select an option"),
+  isLatinHonor: z.string().min(1, "Please select an option"),
 });
 
 type FormValues = z.infer<typeof formSchema>;
 
 const steps = [
+  { id: 0, name: "Pre-Check", icon: CheckCircle }, // New Step 0
   { id: 1, name: "Personal Details", icon: User },
   { id: 2, name: "Academic & Pro", icon: School },
   { id: 3, name: "Exam Details", icon: BookOpen },
@@ -109,7 +112,7 @@ const steps = [
 
 const PreRegister = () => {
   const navigate = useNavigate();
-  const [currentStep, setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState(0); // Start at Step 0
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const { toast } = useToast();
 
@@ -136,6 +139,8 @@ const PreRegister = () => {
       contactConsent: false,
       agreedToTerms: false,
       remarks: "",
+      hasPreRegistered: "",
+      isLatinHonor: "",
     },
     mode: "onChange",
   });
@@ -147,10 +152,14 @@ const PreRegister = () => {
 
   const isExistingSubscriber = watch("isExistingSubscriber");
   const otherReviewCenter = watch("otherReviewCenter");
+  const hasPreRegistered = watch("hasPreRegistered");
+  const isLatinHonor = watch("isLatinHonor");
 
   const nextStep = async () => {
     let fieldsToValidate: (keyof FormValues)[] = [];
-    if (currentStep === 1) {
+    if (currentStep === 0) {
+      fieldsToValidate = ["hasPreRegistered", "isLatinHonor"];
+    } else if (currentStep === 1) {
       fieldsToValidate = [
         "firstName",
         "lastName",
@@ -192,7 +201,7 @@ const PreRegister = () => {
   };
 
   const prevStep = () => {
-    setCurrentStep((prev) => Math.max(prev - 1, 1));
+    setCurrentStep((prev) => Math.max(prev - 1, 0));
   };
 
   const onSubmit = (data: FormValues) => {
@@ -222,7 +231,7 @@ const PreRegister = () => {
                 className="absolute top-0 left-0 h-full bg-green-500"
                 initial={{ width: "0%" }}
                 animate={{
-                  width: `${((currentStep - 1) / (steps.length - 1)) * 100}%`,
+                  width: `${(currentStep / (steps.length - 1)) * 100}%`,
                 }}
                 transition={{ duration: 0.3 }}
               />
@@ -277,6 +286,80 @@ const PreRegister = () => {
                 onSubmit={form.handleSubmit(onSubmit)}
                 className="space-y-6"
               >
+                {/* Step 0: Pre-Check */}
+                {currentStep === 0 && (
+                  <motion.div
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    className="space-y-6"
+                  >
+                    <div className="bg-primary/5 border border-primary/20 p-6 rounded-lg text-center space-y-2">
+                      <h2 className="text-xl font-semibold">
+                        Welcome to BoardPrep Registration
+                      </h2>
+                      <p className="text-muted-foreground">
+                        Please answer a few quick questions to get started.
+                      </p>
+                    </div>
+
+                    <FormField
+                      control={form.control}
+                      name="hasPreRegistered"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-base">
+                            Did you Pre-register?
+                          </FormLabel>
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                          >
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select option" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="yes">Yes</SelectItem>
+                              <SelectItem value="no">No</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="isLatinHonor"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-base">
+                            Are you a clear candidate/graduate with Latin
+                            Honors?
+                          </FormLabel>
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                          >
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Are you a Laude?" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="yes">Yes</SelectItem>
+                              <SelectItem value="no">No</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </motion.div>
+                )}
+
                 {/* Step 1: Personal Details */}
                 {currentStep === 1 && (
                   <motion.div
@@ -321,9 +404,9 @@ const PreRegister = () => {
                         <FormItem>
                           <FormLabel>
                             Email
-                            <span className="text-xs text-muted-foreground ml-2 font-normal">
-                              (Important: This will be our main communication
-                              channel)
+                            <span className="text-xs text-destructive ml-2 font-bold uppercase tracking-wide">
+                              (USE PERSONAL EMAIL ONLY. DO NOT USE SCHOOL
+                              EMAIL.)
                             </span>
                           </FormLabel>
                           <FormControl>
@@ -517,13 +600,30 @@ const PreRegister = () => {
 
                     <div className="p-4 bg-muted/30 rounded-lg border border-border/50">
                       <FormLabel className="mb-2 block">
-                        Proof of Latin Honor (Optional)
+                        Proof of Latin Honor{" "}
+                        {isLatinHonor === "no" && "(Not Applicable)"}
+                        {isLatinHonor === "yes" && (
+                          <span className="text-muted-foreground font-normal ml-1">
+                            (Optional)
+                          </span>
+                        )}
                       </FormLabel>
-                      <FormDescription className="mb-3">
-                        Upload picture of diploma, certificate, or any proof to
-                        qualify for discounts.
-                      </FormDescription>
-                      <Input type="file" className="cursor-pointer" />
+                      {isLatinHonor === "yes" ? (
+                        <>
+                          <FormDescription className="mb-3">
+                            Upload picture of diploma, certificate, or any proof
+                            to qualify for discounts. If you don't have it yet,
+                            you can skip this for now.
+                          </FormDescription>
+                          <Input type="file" className="cursor-pointer" />
+                        </>
+                      ) : (
+                        <p className="text-sm text-muted-foreground italic">
+                          You selected "No" for Latin Honors in the pre-check
+                          step. If this is incorrect, please go back and update
+                          your selection.
+                        </p>
+                      )}
                     </div>
 
                     <div className="space-y-4 pt-4 border-t">
@@ -873,19 +973,16 @@ const PreRegister = () => {
                         <Input type="file" />
                       </div>
 
-                      <div className="space-y-2">
-                        <Label>
-                          Pre-registration Proof of Payment{" "}
-                          <span className="text-muted-foreground font-normal">
-                            (Optional)
-                          </span>
-                        </Label>
-                        <FormDescription>
-                          Upload this only if you have already registered and
-                          paid the reservation fee.
-                        </FormDescription>
-                        <Input type="file" />
-                      </div>
+                      {hasPreRegistered === "no" && (
+                        <div className="space-y-2">
+                          <Label>Pre-registration Proof of Payment</Label>
+                          <FormDescription>
+                            Upload this only if you have already registered and
+                            paid the reservation fee.
+                          </FormDescription>
+                          <Input type="file" />
+                        </div>
+                      )}
 
                       <FormField
                         control={form.control}
@@ -941,10 +1038,10 @@ const PreRegister = () => {
                     type="button"
                     variant="secondary"
                     onClick={prevStep}
-                    disabled={currentStep === 1}
+                    disabled={currentStep === 0}
                     size="sm"
                     className={
-                      currentStep === 1 ? "invisible" : "visible rounded-full"
+                      currentStep === 0 ? "invisible" : "visible rounded-full"
                     }
                   >
                     <ChevronLeft className="w-4 h-4 transition-transform group-hover:translate-x-1" />
