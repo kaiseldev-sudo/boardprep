@@ -30,7 +30,7 @@ const AboutSection = () => {
                   <strong>powerful analytics for universities</strong>. We
                   bridge the gap between hard work and smart study.
                 </p>
-                <p className="animate-fade-up delay-300 text-muted-foreground leading-relaxed text-lg text-justify lg:text-left">
+                <p className="animate-fade-up delay-300 text-muted-foreground leading-relaxed text-lg text-justify lg:text-left ">
                   Study smarter, train harder, and predict your success with
                   every click. Whether you're a student aiming for the top spot
                   or an institution tracking performance, BoardPrep is your

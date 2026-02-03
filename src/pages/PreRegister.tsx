@@ -11,6 +11,11 @@ import {
   Send,
   ChevronLeft,
   CheckCircle,
+  School,
+  Briefcase,
+  CreditCard,
+  FileText,
+  Upload,
 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -22,6 +27,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormDescription,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
@@ -33,6 +39,7 @@ import {
 } from "@/components/ui/select";
 import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import {
   Accordion,
@@ -50,15 +57,41 @@ import {
 } from "@/components/ui/dialog";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { Label } from "@/components/ui/label";
 
 // Schema Definitions
 const formSchema = z.object({
+  // Step 1: Personal Details
   firstName: z.string().min(2, "First name must be at least 2 characters"),
   lastName: z.string().min(2, "Last name must be at least 2 characters"),
+  gender: z.string().min(1, "Please select your gender"),
   email: z.string().email("Invalid email address"),
   phone: z.string().min(10, "Phone number must be at least 10 digits"),
+  province: z.string().min(2, "Province is required"),
+  city: z.string().min(2, "City is required"),
+
+  // Step 2: Academic & Professional
+  school: z.string().min(2, "School name is required"),
+  gradYear: z.string().min(4, "Please enter a valid year"),
+  description: z.string().min(1, "Please select an option"),
+  isEmployed: z.string().min(1, "Please select an option"),
+  latinHonorProof: z.any().optional(), // File inputs are tricky with Zod, keeping lenient for now
+  isExistingSubscriber: z.string().min(1, "Please select an option"),
+  existingSubscriberEmail: z.string().optional(),
+  existingSubscriberProof: z.any().optional(),
+
+  // Step 3: Exam & Review Info
   examType: z.string().min(1, "Please select an exam type"),
   targetDate: z.string().min(1, "Please select a target exam date"),
+  takeOct2025: z.string().min(1, "Please select an option"),
+  examineeType: z.string().min(1, "Please select an option"),
+  otherReviewCenter: z.string().min(1, "Please select an option"),
+  otherReviewCenterName: z.string().optional(),
+  contactConsent: z.boolean().default(false),
+
+  // Step 4: Payment & Verification
+  paymentProof: z.any().optional(), // Make required in logic if needed
+  remarks: z.string().optional(),
   agreedToTerms: z
     .boolean()
     .refine((val) => val === true, "You must agree to the terms"),
@@ -68,8 +101,9 @@ type FormValues = z.infer<typeof formSchema>;
 
 const steps = [
   { id: 1, name: "Personal Details", icon: User },
-  { id: 2, name: "Exam Selection", icon: BookOpen },
-  { id: 3, name: "Review & Submit", icon: Send },
+  { id: 2, name: "Academic & Pro", icon: School },
+  { id: 3, name: "Exam Details", icon: BookOpen },
+  { id: 4, name: "Payment & Verify", icon: CreditCard },
 ];
 
 const PreRegister = () => {
@@ -83,30 +117,76 @@ const PreRegister = () => {
     defaultValues: {
       firstName: "",
       lastName: "",
+      gender: "",
       email: "",
       phone: "",
+      province: "",
+      city: "",
+      school: "",
+      gradYear: "",
+      description: "",
+      isEmployed: "",
+      isExistingSubscriber: "no",
       examType: "",
       targetDate: "",
+      takeOct2025: "",
+      examineeType: "",
+      otherReviewCenter: "no",
+      contactConsent: false,
       agreedToTerms: false,
+      remarks: "",
     },
     mode: "onChange",
   });
 
   const {
     formState: { errors, isValid },
+    watch,
   } = form;
+
+  const isExistingSubscriber = watch("isExistingSubscriber");
+  const otherReviewCenter = watch("otherReviewCenter");
 
   const nextStep = async () => {
     let fieldsToValidate: (keyof FormValues)[] = [];
     if (currentStep === 1) {
-      fieldsToValidate = ["firstName", "lastName", "email", "phone"];
+      fieldsToValidate = [
+        "firstName",
+        "lastName",
+        "gender",
+        "email",
+        "phone",
+        "province",
+        "city",
+      ];
     } else if (currentStep === 2) {
-      fieldsToValidate = ["examType", "targetDate"];
+      fieldsToValidate = [
+        "school",
+        "gradYear",
+        "description",
+        "isEmployed",
+        "isExistingSubscriber",
+      ];
+      // Add conditional validation if needed
+    } else if (currentStep === 3) {
+      fieldsToValidate = [
+        "examType",
+        "targetDate",
+        "takeOct2025",
+        "examineeType",
+        "otherReviewCenter",
+      ];
     }
 
     const isStepValid = await form.trigger(fieldsToValidate);
     if (isStepValid) {
       setCurrentStep((prev) => Math.min(prev + 1, steps.length));
+    } else {
+      toast({
+        title: "Missing Information",
+        description: "Please fill in all required fields to proceed.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -117,14 +197,13 @@ const PreRegister = () => {
   const onSubmit = (data: FormValues) => {
     console.log("Form submitted:", data);
     setShowSuccessModal(true);
-    // Here you would typically send data to an API
   };
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Header />
 
-      <main className="flex-1 container mx-auto px-4 py-8 md:py-12 max-w-3xl mt-24">
+      <main className="flex-1 container mx-auto px-4 py-8 md:py-12 max-w-4xl mt-24">
         <div className="mb-8 text-center">
           <h1 className="text-3xl font-bold tracking-tight mb-2">
             Pre-Registration
@@ -136,7 +215,6 @@ const PreRegister = () => {
 
         {/* Stepper */}
         <div className="mb-8 relative">
-          {/* Progress Lines */}
           <div className="absolute top-5 left-0 w-full px-7">
             <div className="relative h-[2px] w-full bg-gray-200">
               <motion.div
@@ -177,7 +255,7 @@ const PreRegister = () => {
                     )}
                   </div>
                   <span
-                    className={`mt-2 text-xs font-medium transition-colors duration-300 ${
+                    className={`mt-2 text-xs font-medium transition-colors duration-300 hidden sm:block ${
                       isActive || isCompleted
                         ? "text-foreground"
                         : "text-muted-foreground"
@@ -234,12 +312,19 @@ const PreRegister = () => {
                         )}
                       />
                     </div>
+
                     <FormField
                       control={form.control}
                       name="email"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Email</FormLabel>
+                          <FormLabel>
+                            Email
+                            <span className="text-xs text-muted-foreground ml-2 font-normal">
+                              (Important: This will be our main communication
+                              channel)
+                            </span>
+                          </FormLabel>
                           <FormControl>
                             <Input
                               type="email"
@@ -247,28 +332,267 @@ const PreRegister = () => {
                               {...field}
                             />
                           </FormControl>
+                          <FormDescription>
+                            You'll receive updates and calendar invites through
+                            this email.
+                          </FormDescription>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
-                    <FormField
-                      control={form.control}
-                      name="phone"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Phone Number</FormLabel>
-                          <FormControl>
-                            <Input placeholder="+1234567890" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="phone"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Contact Number</FormLabel>
+                            <FormControl>
+                              <Input placeholder="09123456789" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="gender"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Gender</FormLabel>
+                            <Select
+                              onValueChange={field.onChange}
+                              defaultValue={field.value}
+                            >
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select gender" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectItem value="male">Male</SelectItem>
+                                <SelectItem value="female">Female</SelectItem>
+                                <SelectItem value="prefer-not-to-say">
+                                  Prefer not to say
+                                </SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="province"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Home Address (Province)</FormLabel>
+                            <FormControl>
+                              <Input placeholder="e.g. Cavite" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="city"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Home Address (City/Town)</FormLabel>
+                            <FormControl>
+                              <Input placeholder="e.g. Dasmarinas" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
                   </motion.div>
                 )}
 
-                {/* Step 2: Exam Selection */}
+                {/* Step 2: Academic & Professional */}
                 {currentStep === 2 && (
+                  <motion.div
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    className="space-y-4"
+                  >
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="school"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>University / College / School</FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="e.g. Univ of Philippines"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="gradYear"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Year Graduated / Graduating</FormLabel>
+                            <FormControl>
+                              <Input placeholder="2025" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+
+                    <FormField
+                      control={form.control}
+                      name="description"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>
+                            Which of the following best describes you?
+                          </FormLabel>
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                          >
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select description" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="undergraduate">
+                                Undergraduate Student
+                              </SelectItem>
+                              <SelectItem value="graduate">
+                                Recent Graduate
+                              </SelectItem>
+                              <SelectItem value="professional">
+                                Working Professional
+                              </SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="isEmployed"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Are you currently employed?</FormLabel>
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                          >
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select option" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="yes">Yes</SelectItem>
+                              <SelectItem value="no">No</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <div className="p-4 bg-muted/30 rounded-lg border border-border/50">
+                      <FormLabel className="mb-2 block">
+                        Proof of Latin Honor (Optional)
+                      </FormLabel>
+                      <FormDescription className="mb-3">
+                        Upload picture of diploma, certificate, or any proof to
+                        qualify for discounts.
+                      </FormDescription>
+                      <Input type="file" className="cursor-pointer" />
+                    </div>
+
+                    <div className="space-y-4 pt-4 border-t">
+                      <FormField
+                        control={form.control}
+                        name="isExistingSubscriber"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>
+                              Are you an existing Board Prep subscriber?
+                            </FormLabel>
+                            <Select
+                              onValueChange={field.onChange}
+                              defaultValue={field.value}
+                            >
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select option" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectItem value="yes">Yes</SelectItem>
+                                <SelectItem value="no">No</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      {isExistingSubscriber === "yes" && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          className="space-y-4 pl-4 border-l-2 border-primary/20"
+                        >
+                          <FormField
+                            control={form.control}
+                            name="existingSubscriberEmail"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>
+                                  Registered Email in Board Prep Platform
+                                </FormLabel>
+                                <FormControl>
+                                  <Input
+                                    placeholder="email@example.com"
+                                    {...field}
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <div className="space-y-2">
+                            <Label>Proof of Existing Subscription</Label>
+                            <FormDescription>
+                              Screenshot of the expiration (Settings &gt;
+                              Subscription Tab)
+                            </FormDescription>
+                            <Input type="file" />
+                          </div>
+                        </motion.div>
+                      )}
+                    </div>
+                  </motion.div>
+                )}
+
+                {/* Step 3: Exam Selection */}
+                {currentStep === 3 && (
                   <motion.div
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
@@ -309,30 +633,93 @@ const PreRegister = () => {
                         </FormItem>
                       )}
                     />
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="targetDate"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Target Exam Date</FormLabel>
+                            <Select
+                              onValueChange={field.onChange}
+                              defaultValue={field.value}
+                            >
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select date" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectItem value="august-2025">
+                                  August 2025
+                                </SelectItem>
+                                <SelectItem value="february-2026">
+                                  February 2026
+                                </SelectItem>
+                                <SelectItem value="august-2026">
+                                  August 2026
+                                </SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="takeOct2025"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>
+                              Take Oct 2025 Exam? (If Applicable)
+                            </FormLabel>
+                            <Select
+                              onValueChange={field.onChange}
+                              defaultValue={field.value}
+                            >
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select option" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectItem value="yes">Yes</SelectItem>
+                                <SelectItem value="no">No</SelectItem>
+                                <SelectItem value="undecided">
+                                  Undecided
+                                </SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+
                     <FormField
                       control={form.control}
-                      name="targetDate"
+                      name="examineeType"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Target Exam Date</FormLabel>
+                          <FormLabel>Type of Examinee</FormLabel>
                           <Select
                             onValueChange={field.onChange}
                             defaultValue={field.value}
                           >
                             <FormControl>
                               <SelectTrigger>
-                                <SelectValue placeholder="When are you planning to take the exam?" />
+                                <SelectValue placeholder="Select type" />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="august-2025">
-                                August 2025
+                              <SelectItem value="first-timer">
+                                First Timer
                               </SelectItem>
-                              <SelectItem value="february-2026">
-                                February 2026
-                              </SelectItem>
-                              <SelectItem value="august-2026">
-                                August 2026
+                              <SelectItem value="retaker">Retaker</SelectItem>
+                              <SelectItem value="refresher">
+                                Refresher
                               </SelectItem>
                             </SelectContent>
                           </Select>
@@ -340,109 +727,216 @@ const PreRegister = () => {
                         </FormItem>
                       )}
                     />
+
+                    <div className="space-y-4 pt-4 border-t">
+                      <FormField
+                        control={form.control}
+                        name="otherReviewCenter"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>
+                              Are you enrolled in other Review Centers?
+                            </FormLabel>
+                            <Select
+                              onValueChange={field.onChange}
+                              defaultValue={field.value}
+                            >
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select option" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectItem value="yes">Yes</SelectItem>
+                                <SelectItem value="no">No</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      {otherReviewCenter === "yes" && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                        >
+                          <FormField
+                            control={form.control}
+                            name="otherReviewCenterName"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>
+                                  Name of Review Center (Type NA if none)
+                                </FormLabel>
+                                <FormControl>
+                                  <Input placeholder="Center Name" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        </motion.div>
+                      )}
+                    </div>
+
+                    <FormField
+                      control={form.control}
+                      name="contactConsent"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                            />
+                          </FormControl>
+                          <div className="space-y-1 leading-none">
+                            <FormLabel>
+                              Do you want us to contact you in the future
+                              regarding promotion of BoardPrep in your school?
+                            </FormLabel>
+                          </div>
+                        </FormItem>
+                      )}
+                    />
                   </motion.div>
                 )}
 
-                {/* Step 3: Review */}
-                {currentStep === 3 && (
+                {/* Step 4: Payment & Verify */}
+                {currentStep === 4 && (
                   <motion.div
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: -20 }}
                     className="space-y-6"
                   >
-                    <div className="bg-muted/30 p-4 rounded-lg space-y-4">
-                      <h3 className="font-semibold text-lg border-b pb-2">
-                        Review Your Details
+                    <div className="bg-primary/5 border border-primary/20 p-4 rounded-lg space-y-4">
+                      <h3 className="font-semibold text-lg flex items-center gap-2">
+                        <CreditCard className="text-foreground w-5 h-5" /> Payment
+                        Details
                       </h3>
-
-                      <div className="space-y-3">
-                        <div className="flex justify-between items-center">
-                          <h4 className="text-sm font-medium text-muted-foreground">
-                            Personal Information
-                          </h4>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => setCurrentStep(1)}
-                            type="button"
-                            className="h-auto p-0 text-primary hover:text-primary/80"
-                          >
-                            Edit
-                          </Button>
+                      <div className="text-sm space-y-4">
+                        <div className="p-4 rounded-lg border bg-card text-card-foreground shadow-sm">
+                          <p className="font-bold text-lg text-foreground mb-2">
+                            Regular Price (Php 9,999.00)
+                          </p>
+                          <p className="text-muted-foreground leading-relaxed">
+                            Bank:{" "}
+                            <span className="text-foreground font-medium">
+                              Union Bank
+                            </span>
+                            <br />
+                            Name:{" "}
+                            <span className="text-foreground font-medium">
+                              Board Prep Solutions Incorporated
+                            </span>
+                            <br />
+                            Account:{" "}
+                            <span className="text-foreground font-bold">
+                              0010 3002 0003
+                            </span>
+                          </p>
                         </div>
-                        <div className="grid grid-cols-2 gap-2 text-sm pl-2 border-l-2 border-muted">
-                          <span className="text-muted-foreground">
-                            Full Name:
-                          </span>
-                          <span className="font-medium text-right">
-                            {form.getValues("firstName")}{" "}
-                            {form.getValues("lastName")}
-                          </span>
-
-                          <span className="text-muted-foreground">Email:</span>
-                          <span className="font-medium text-right">
-                            {form.getValues("email")}
-                          </span>
-
-                          <span className="text-muted-foreground">Phone:</span>
-                          <span className="font-medium text-right">
-                            {form.getValues("phone")}
-                          </span>
+                        <div className="p-4 rounded-lg border bg-card text-card-foreground shadow-sm">
+                          <p className="font-bold text-lg text-foreground mb-2">
+                            Discounted / Less 500 (Php 9,499.00)
+                          </p>
+                          <p className="text-muted-foreground leading-relaxed">
+                            Bank:{" "}
+                            <span className="text-foreground font-medium">
+                              Union Bank
+                            </span>
+                            <br />
+                            Name:{" "}
+                            <span className="text-foreground font-medium">
+                              Board Prep Solutions Incorporated
+                            </span>
+                            <br />
+                            Account:{" "}
+                            <span className="text-foreground font-bold">
+                              0010 3002 0003
+                            </span>
+                          </p>
                         </div>
-                      </div>
-
-                      <div className="space-y-3">
-                        <div className="flex justify-between items-center">
-                          <h4 className="text-sm font-medium text-muted-foreground">
-                            Exam Details
-                          </h4>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => setCurrentStep(2)}
-                            type="button"
-                            className="h-auto p-0 text-primary hover:text-primary/80"
-                          >
-                            Edit
-                          </Button>
-                        </div>
-                        <div className="grid grid-cols-2 gap-2 text-sm pl-2 border-l-2 border-muted">
-                          <span className="text-muted-foreground">Exam:</span>
-                          <span className="font-medium text-right uppercase">
-                            {form.getValues("examType")}
-                          </span>
-
-                          <span className="text-muted-foreground">Date:</span>
-                          <span className="font-medium text-right capitalize">
-                            {form.getValues("targetDate")?.replace("-", " ")}
-                          </span>
+                        <div className="p-4 rounded-lg border bg-card text-card-foreground shadow-sm">
+                          <p className="font-bold text-lg text-foreground mb-2">
+                            50% Discount (Php 4,999.00)
+                          </p>
+                          <p className="text-muted-foreground leading-relaxed">
+                            Bank:{" "}
+                            <span className="text-foreground font-medium">
+                              Union Bank
+                            </span>
+                            <br />
+                            Name:{" "}
+                            <span className="text-foreground font-medium">
+                              Board Prep Solutions Incorporated
+                            </span>
+                            <br />
+                            Account:{" "}
+                            <span className="text-foreground font-bold">
+                              0010 3002 0003
+                            </span>
+                          </p>
                         </div>
                       </div>
                     </div>
 
-                    <div className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow-sm bg-yellow-500/10 border-yellow-500/20">
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <Label>Proof of Payment</Label>
+                        <FormDescription>
+                          Please take a screenshot as a proof of payment and
+                          upload it here.
+                        </FormDescription>
+                        <Input type="file" />
+                      </div>
+
                       <FormField
                         control={form.control}
-                        name="agreedToTerms"
+                        name="remarks"
                         render={({ field }) => (
-                          <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                          <FormItem>
+                            <FormLabel>Remarks (Optional)</FormLabel>
                             <FormControl>
-                              <Checkbox
-                                checked={field.value}
-                                onCheckedChange={field.onChange}
+                              <Textarea
+                                placeholder="Any additional notes..."
+                                {...field}
                               />
                             </FormControl>
-                            <div className="space-y-1 leading-none">
-                              <FormLabel>
-                                I agree to be contacted by BoardPrep Solutions
-                                team.
-                              </FormLabel>
-                              <FormMessage />
-                            </div>
+                            <FormMessage />
                           </FormItem>
                         )}
                       />
+
+                      <div className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow-sm bg-yellow-500/10 border-yellow-500/20">
+                        <FormField
+                          control={form.control}
+                          name="agreedToTerms"
+                          render={({ field }) => (
+                            <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                              <FormControl>
+                                <Checkbox
+                                  checked={field.value}
+                                  onCheckedChange={field.onChange}
+                                />
+                              </FormControl>
+                              <div className="space-y-1 leading-none">
+                                <FormLabel>
+                                  I agree to be contacted by BoardPrep Solutions
+                                  team regarding my application.
+                                </FormLabel>
+                                <FormDescription className="mt-1 text-xs">
+                                  You will receive an email within 24 hours to
+                                  confirm registration.
+                                </FormDescription>
+                                <FormMessage />
+                              </div>
+                            </FormItem>
+                          )}
+                        />
+                      </div>
                     </div>
                   </motion.div>
                 )}
@@ -460,7 +954,7 @@ const PreRegister = () => {
                     }
                   >
                     <ChevronLeft className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                    {currentStep === steps.length ? "Back to Edit" : "Back"}
+                    {currentStep === steps.length ? "Back" : "Back"}
                   </Button>
 
                   {currentStep < steps.length ? (
@@ -605,60 +1099,6 @@ const PreRegister = () => {
                     </ul>
                   </div>
                 </div>
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem
-              value="item-4"
-              className="border rounded-lg px-6 bg-card"
-            >
-              <AccordionTrigger className="text-left hover:no-underline">
-                What features are included in the review classes?
-              </AccordionTrigger>
-              <AccordionContent className="text-muted-foreground">
-                All our review classes include:
-                <ul className="list-disc list-inside mt-2 space-y-1">
-                  <li>Board Topnotcher Speakers</li>
-                  <li>Learning Management System (LMS) access</li>
-                  <li>Updated Question Drills</li>
-                  <li>Comprehensive Review Notes</li>
-                  <li>Mock Exams & Post-assessments</li>
-                  <li>Recorded Q and A sessions</li>
-                  <li>Final Coaching</li>
-                  <li>Vet Flash Cards (for Veterinary review - New!)</li>
-                </ul>
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem
-              value="item-5"
-              className="border rounded-lg px-6 bg-card"
-            >
-              <AccordionTrigger className="text-left hover:no-underline">
-                How do I qualify for the 50% discount?
-              </AccordionTrigger>
-              <AccordionContent className="text-muted-foreground">
-                Students who graduated with Latin honors (Cum Laude, Magna Cum
-                Laude, or Summa Cum Laude) are eligible for a 50% discount on
-                the review fee. You will need to provide proof of your Latin
-                honors status during the enrollment process, such as a copy of
-                your diploma or transcript of records.
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem
-              value="item-6"
-              className="border rounded-lg px-6 bg-card"
-            >
-              <AccordionTrigger className="text-left hover:no-underline">
-                What happens after I submit my pre-registration?
-              </AccordionTrigger>
-              <AccordionContent className="text-muted-foreground">
-                After submitting your pre-registration form, our team will
-                contact you within 1-2 business days via email or phone to
-                confirm your reservation and provide payment instructions for
-                the ₱500 reservation fee. Once payment is confirmed, your slot
-                will be officially reserved for the selected review class.
               </AccordionContent>
             </AccordionItem>
           </Accordion>
